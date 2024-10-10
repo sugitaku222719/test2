@@ -21,9 +21,8 @@ function App() {
   const [users, setUsers] = useState([]);
   const [userName, setUserName] = useState('');
   const [age, setAge] = useState('');
+  
 
-  
-  
   const handleClickFetchButton = async () => {
     const db = firebase.firestore();
     //collection 取得
@@ -36,7 +35,10 @@ function App() {
         ...doc.data()
       })
     });
+    setUsers(_users);
   };
+
+  
 
 
   const handleClickAddButton = async () => {
@@ -64,10 +66,10 @@ function App() {
   };
     
     
-    setUsers(_users);
+    
 
-    //特定の条件に合うものだけ取得(where,limit)
-    /*
+  //特定の条件に合うものだけ取得(where,limit)
+  /*
     const usersRef = db.collection('users');
     const snapshot = await usersRef
     .where("age", ">=", 20)
@@ -78,8 +80,8 @@ function App() {
     });
     */
 
-    // document取得
-    /*
+  // document取得
+  /*
     const userRef = db.collection('users').doc('cTHCCZTUjcDzyy2RSMMj')
     const doc = await userRef.get()
     console.log('Document data:', doc.data());
@@ -129,10 +131,24 @@ function App() {
 
   return (
     <div className="App">
+      <label htmlFor="username" >userName:</label>
+      <input
+        type="text"
+        id="username"
+        value={userName}
+        onChange={(event) => {setUserName(event.target.value)}}
+      />
+      <label htmlAge="age" >age:</label>
+      <input
+        type="text"
+        id="age"
+        value={age}
+        onChange={(event) => {setAge(event.target.value)}}
+      />
       <h1>hello world</h1>
       <button onClick={handleClickFetchButton}>取得</button>
-      <button onClick={handleClickSetButton}>設定</button>
-      <button onClick={handleClickEditButton}>変更</button>
+      {/* <button onClick={handleClickSetButton}>設定</button>
+      <button onClick={handleClickEditButton}>変更</button> */}
       <button onClick={handleClickAddButton}>追加</button>
 
       <ul>{userListItems}</ul>
