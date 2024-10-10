@@ -65,8 +65,14 @@ function App() {
     setAge('');
   };
     
-    
-    
+  const handleClickUpdateButton = async () => {
+    const db = firebase.firestore();
+    const userRef = db.collection('users').doc('cTHCCZTUjcDzyy2RSMMj');
+    userRef.update({
+      name:'新しい田中',
+      age: 100
+    });
+  }
 
   //特定の条件に合うものだけ取得(where,limit)
   /*
@@ -150,6 +156,7 @@ function App() {
       {/* <button onClick={handleClickSetButton}>設定</button>
       <button onClick={handleClickEditButton}>変更</button> */}
       <button onClick={handleClickAddButton}>追加</button>
+      <button onClick={handleClickUpdateButton}>更新</button>
 
       <ul>{userListItems}</ul>
     </div>
