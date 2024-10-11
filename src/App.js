@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
@@ -23,6 +23,23 @@ function App() {
   const [age, setAge] = useState('');
   const [documentId, setDocumentId] = useState('');
   
+  useEffect(() => {
+    const db = firebase.firestore();
+    const usersRef = db.collection('users').orderBy('age', 'desc')
+    const unsubscribe = usersRef.onSnapshot((querySnapshot) => {
+      const _users = querySnapshot.docs.map(doc => {
+        return{
+          userId: doc.id,
+          ...doc.data()
+        }
+      });
+      setUsers(_users);
+    });
+    console.log("あいうえお")
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const handleClickFetchButton = async () => {
     const db = firebase.firestore();
@@ -177,6 +194,21 @@ function App() {
     await userRef.delete();
   }
   
+  //データベースの検知
+  useEffect(() => {
+    const db = firebase.firestore();
+    const unsubscribe = db.collection('users').onSnapshot((querySnapshot) => {
+      console.log('検知！！！');
+      querySnapshot.forEach(
+        doc => {
+          console.log(doc.id, doc.data());
+          console.log('-----------');
+        });
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 */
   const userListItems = users.map(user => {
     return(
