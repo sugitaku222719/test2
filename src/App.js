@@ -39,9 +39,6 @@ function App() {
     setUsers(_users);
   };
 
-  
-
-
   const handleClickAddButton = async () => {
     if (!userName || !age) {
       alert('"username"or"age"が空です');
@@ -90,6 +87,23 @@ function App() {
     }
   };
   
+  const handleClickDeleteButton = async () => {
+    if (!documentId) {
+      alert('documentidをセットしてください');
+      return;
+    }
+
+    try{
+      const db = firebase.firestore();
+      await db.collection("users").doc(documentId).delete();
+      setUserName('');
+      setAge('');
+      setDocumentId('');  
+      } catch (error) {
+      console.error(error);
+      }
+  };
+
 /*
   //特定の条件に合うものだけ取得(where,limit)
 
@@ -155,6 +169,13 @@ function App() {
       age: 100
     });
   }
+
+  //データベースの削除
+  const handleClickDeleteButton = async () => {
+    const db = firebase.firestore();
+    const userRef = db.collection('users').doc('cTHCCZTUjcDzyy2RSMMj');
+    await userRef.delete();
+  }
   
 */
   const userListItems = users.map(user => {
@@ -199,6 +220,7 @@ function App() {
       <button onClick={handleClickEditButton}>変更</button> */}
       <button onClick={handleClickAddButton}>追加</button>
       <button onClick={handleClickUpdateButton}>更新</button>
+      <button onClick={handleClickDeleteButton}>削除</button>
 
       <ul>{userListItems}</ul>
     </div>
