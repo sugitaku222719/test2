@@ -21,6 +21,7 @@ function App() {
   const [users, setUsers] = useState([]);
   const [userName, setUserName] = useState('');
   const [age, setAge] = useState('');
+  const [documentId, setDocumentId] = useState('');
   
 
   const handleClickFetchButton = async () => {
@@ -64,18 +65,34 @@ function App() {
     setUserName('');
     setAge('');
   };
-    
-  const handleClickUpdateButton = async () => {
-    const db = firebase.firestore();
-    const userRef = db.collection('users').doc('cTHCCZTUjcDzyy2RSMMj');
-    userRef.update({
-      name:'新しい田中',
-      age: 100
-    });
-  }
 
+  const handleClickUpdateButton = async () => {
+    if (!documentId) {
+      alert('documentidをセットしてください');
+      return;
+    }
+
+    const newData = {};
+    if (userName) {
+      newData['name'] = userName;
+    }
+    if (age) {
+      newData['age'] = parseInt(age,10);;
+    }
+    try{
+      const db = firebase.firestore();
+    await db.collection("users").doc(documentId).update(newData);
+    setUserName('');
+    setAge('');
+    setDocumentId('');  
+    } catch (error) {
+    console.error(error);
+    }
+  };
+  
+/*
   //特定の条件に合うものだけ取得(where,limit)
-  /*
+
     const usersRef = db.collection('users');
     const snapshot = await usersRef
     .where("age", ">=", 20)
@@ -84,10 +101,10 @@ function App() {
     snapshot.forEach(doc => {
       console.log(doc.id, doc.data());
     });
-    */
+  
 
   // document取得
-  /*
+
     const userRef = db.collection('users').doc('cTHCCZTUjcDzyy2RSMMj')
     const doc = await userRef.get()
     console.log('Document data:', doc.data());
@@ -96,10 +113,10 @@ function App() {
     } else {
       console.log('Document data:', doc.data());
     }
-    */
+
 
   //データベースの変更
-  /*
+
   const handleClickSetButton = async () => {
     const db = firebase.firestore();
     await db
@@ -128,12 +145,30 @@ function App() {
       age: 1000
     });
   };
-  */
 
+  //データベースの更新
+  const handleClickUpdateButton = async () => {
+    const db = firebase.firestore();
+    const userRef = db.collection('users').doc('cTHCCZTUjcDzyy2RSMMj');
+    userRef.update({
+      name:'新しい田中',
+      age: 100
+    });
+  }
+  
+*/
   const userListItems = users.map(user => {
     return(
-      <li key={user.userId}> {user.name} : {user.age} : {user.location} </li>
-    )});
+      <li key={user.userId}> 
+        <ul>
+          <li>ID : {user.userId}</li>
+          <li>name : {user.name}</li>
+          <li>age : {user.age}</li>
+          <li>location : {user.location}</li>
+        </ul>
+       </li>
+    );
+  });
 
   return (
     <div className="App">
@@ -150,6 +185,13 @@ function App() {
         id="age"
         value={age}
         onChange={(event) => {setAge(event.target.value)}}
+      />
+      <label htmlAge="documentId" >documentId:</label>
+      <input
+        type="text"
+        id="documentId"
+        value={documentId}
+        onChange={(event) => {setDocumentId(event.target.value)}}
       />
       <h1>hello world</h1>
       <button onClick={handleClickFetchButton}>取得</button>
