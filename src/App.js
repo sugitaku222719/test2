@@ -35,7 +35,6 @@ function App() {
       });
       setUsers(_users);
     });
-    console.log("あいうえお")
     return () => {
       unsubscribe();
     };
